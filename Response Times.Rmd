@@ -1,0 +1,53 @@
+---
+title: "Response Times"
+output: html_document
+---
+
+# Bryan Consuegra, Panther ID 6040474
+# Jessela Baniqued, Panther ID 6155725
+# Leonardo Gutierrez, Panther ID 5105116
+
+```{r rates2}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+viz_names <- c("TreeMap","Botan. Viewer","SunBurst","IcicleTree","SpaceTree","Win. Explorer","BeamTree","StarTree","Dendo. Tree", "Polar View", "Step Tree")
+cor_times <- c(35.0, 39.6, 23.2, 22.0, 20.8, 21.8, 27.7, 23.4, 25.7, 27.6, 39.0)
+err_times <- c(37.3, 40.6, 47.1, 41.2, 40.9, 38.0, 35.6, 43.5, 43.2, 37.2, 40.6)
+abd_times <- c(34.5, 35.3, 37.8, 42.4, 52.1, 38.6, 29.9, 50.8, 43.2, 35.0, 29.6)
+
+df <- data.frame(viz_names, cor_times, err_times, abd_times)
+
+df_long <- df %>%
+  gather("Type", "Times", -viz_names)
+
+ggplot(df_long, aes(x = viz_names, y = Times, fill = Type)) + 
+  geom_col(position = position_dodge()) +
+  coord_flip() + theme_bw(base_size = 15) + ggtitle("Response Time Comparison") +
+  labs(x="Visualization Types", y="Response Times (seconds)", fill="Types of Responses") +
+  scale_fill_manual(values=c("grey68", "tomato", "lightgreen"), 
+                       name="Types of Responses",
+                       breaks=c("cor_times", "err_times", "abd_times"),
+                       labels=c("Correct", "Incorrect", "Abandoned"))
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

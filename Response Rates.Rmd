@@ -1,0 +1,33 @@
+---
+title: "Response Rates"
+output: html_notebook
+---
+
+# Bryan Consuegra, Panther ID 6040474
+# Jessela Baniqued, Panther ID 6155725
+# Leonardo Gutierrez, Panther ID 5105116
+
+```{r rates3}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+viz_names <- c("TreeMap","Botan. Viewer","SunBurst","IcicleTree","SpaceTree","Win. Explorer","BeamTree","StarTree","Dendo. Tree", "Polar View", "Step Tree")
+z_cor_rates <- (c(.32, .43, .84, .81, .73, .79, .28, .81, .74, .69, .42)) * 100
+abd_rates <- (c(.38, .32, .07, .12, .06, .08, .55, .07, .11, .15, .35)) * 100
+err_rates <- 100 - (z_cor_rates + abd_rates)
+
+df <- data.frame(viz_names, z_cor_rates, err_rates, abd_rates)
+
+df_long <- df %>%
+  gather("Type", "Rates", -viz_names)
+
+ggplot(df_long, aes(x = viz_names, y = Rates, fill = Type)) + geom_col() +
+  coord_flip() + theme_bw(base_size = 15) + ggtitle("Response Rate Comparison") +
+  labs(x="Visualization Types", y="Response Rates (%)", fill="Types of Responses") +
+  scale_fill_manual(values=c("grey68", "tomato", "lightgreen"), 
+                       name="Types of Responses",
+                       breaks=c("z_cor_rates", "err_rates", "abd_rates"),
+                       labels=c("Correct", "Incorrect", "Abandoned"))
+  
+```

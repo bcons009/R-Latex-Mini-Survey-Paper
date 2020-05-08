@@ -1,0 +1,44 @@
+---
+title: "2D v 3D Response Rates"
+output: html_document
+---
+
+# Bryan Consuegra, Panther ID 6040474
+# Jessela Baniqued, Panther ID 6155725
+# Leonardo Gutierrez, Panther ID 5105116
+
+```{r 2Dv3D_rates}
+
+two_viz_names <- c("TreeMap","SunBurst","IcicleTree","SpaceTree","Win. Explorer","StarTree","Dendo. Tree", "Polar View")
+two_cor_rates <- (c(.32,.84,.81,.73,.79,.81,.74,.69)) * 100
+two_abd_rates <- (c(.38,.07,.12,.06,.08,.07,.11,.15)) * 100
+two_err_rates <- 100 - (two_cor_rates + two_abd_rates)
+
+three_viz_names <- c("Botan. Viewer", "BeamTree", "Step Tree")
+three_cor_rates <- (c(.43, .28, .42)) * 100
+three_abd_rates <- (c(.32, .55, .35)) * 100
+three_err_rates <- 100 - (three_cor_rates + three_abd_rates)
+
+response_types <- c("Correct", "Incorrect", "Abandoned")
+three_data <- c(mean(three_cor_rates), mean(three_err_rates), mean(three_abd_rates))
+a_two_data <- c(mean(two_cor_rates), mean(two_err_rates), mean(two_abd_rates))
+
+df <- data.frame(response_types, a_two_data, three_data)
+
+df_long <- df %>%
+  gather("Dimensions", "Rates", -response_types)
+
+g <- ggplot(df_long, aes(x = response_types, y = Rates, fill = Dimensions)) + 
+  geom_col(position = position_dodge()) + scale_y_continuous(limits=c(0, 100)) + 
+  theme(legend.position="bottom", text = element_text(size=25)) +
+  ggtitle("Dimensional Response\nRate Comparison") +
+  labs(x="Response Types", y="Average Response Rates (%)", fill="# of Dimensions in Visual") +
+  scale_fill_manual(values=c("#fb9062", "#ce4993"), 
+                       name="# of Dimensions in Visual",
+                       breaks=c("a_two_data", "three_data"),
+                       labels=c("2D", "3D"))
+
+# This line saves a PNG file of the graph onto your working directory
+ggsave(g, file = "dim_responses.png", width = 7, height = 8)
+
+```
